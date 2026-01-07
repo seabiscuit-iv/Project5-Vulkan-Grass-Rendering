@@ -1,0 +1,37 @@
+{
+    "version": 8,
+    "configurePresets": [
+        {
+            "name": "Debug",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_MAKE_PROGRAM": "ninja",
+                "CMAKE_COLOR_DIAGNOSTICS": "ON",
+                "CMAKE_RULE_MESSAGES": "OFF",
+                "CMAKE_VERBOSE_MAKEFILE": "OFF",
+                "CMAKE_CXX_FLAGS": "-fdiagnostics-format=clang"
+            }
+        },
+        {
+            "name": "Release",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_MAKE_PROGRAM": "ninja",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_COLOR_DIAGNOSTICS": "ON",
+                "CMAKE_RULE_MESSAGES": "OFF",
+                "CMAKE_VERBOSE_MAKEFILE": "OFF",
+                "CMAKE_CXX_FLAGS": "-fdiagnostics-format=clang"
+            }
+        }
+    ]
+}

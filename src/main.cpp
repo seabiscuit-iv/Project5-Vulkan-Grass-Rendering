@@ -6,10 +6,27 @@
 #include "Scene.h"
 #include "Image.h"
 
+#include <iostream>
+
 Device* device;
 SwapChain* swapChain;
 Renderer* renderer;
 Camera* camera;
+
+void terminateHandler() {
+    if (auto ex = std::current_exception()) {
+        try {
+            std::rethrow_exception(ex);
+        } catch (const std::exception& e) {
+            std::cerr << "Uncaught exception: " << e.what() << std::endl;
+        } catch (...) {
+            std::cerr << "Uncaught non-standard exception" << std::endl;
+        }
+    } else {
+        std::cerr << "Terminate called without active exception" << std::endl;
+    }
+    std::abort();
+}
 
 namespace {
     void resizeCallback(GLFWwindow* window, int width, int height) {
@@ -66,8 +83,10 @@ namespace {
 }
 
 int main() {
+    std::set_terminate(terminateHandler);
+
     static constexpr char* applicationName = "Vulkan Grass Rendering";
-    InitializeWindow(640, 480, applicationName);
+    InitializeWindow(1920, 1080, applicationName);
 
     unsigned int glfwExtensionCount = 0;
     const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);

@@ -200,7 +200,7 @@ void Image::FromFile(Device* device, VkCommandPool commandPool, const char* path
     VkDeviceSize imageSize = texWidth * texHeight * 4;
 
     if (!pixels) {
-        throw std::runtime_error("Failed to load texture image");
+        throw std::runtime_error("Failed to load texture image at " + std::string(path));
     }
 
     // Create staging buffer
