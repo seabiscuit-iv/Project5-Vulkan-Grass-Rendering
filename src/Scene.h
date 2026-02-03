@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <chrono>
+#include <vulkan/vulkan_core.h>
 
 #include "Model.h"
 #include "Blades.h"

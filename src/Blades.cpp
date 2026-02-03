@@ -1,4 +1,5 @@
 #include <vector>
+#include <vulkan/vulkan_core.h>
 #include "Blades.h"
 #include "BufferUtils.h"
 
@@ -44,9 +45,17 @@ Blades::Blades(Device* device, VkCommandPool commandPool, float planeDim) : Mode
     indirectDraw.firstVertex = 0;
     indirectDraw.firstInstance = 0;
 
-    BufferUtils::CreateBufferFromData(device, commandPool, blades.data(), NUM_BLADES * sizeof(Blade), VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, bladesBuffer, bladesBufferMemory);
-    BufferUtils::CreateBuffer(device, NUM_BLADES * sizeof(Blade), VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, culledBladesBuffer, culledBladesBufferMemory);
+    std::vector<glm::vec4> blade_state_data;
+    blade_state_data.reserve(NUM_BLADES);
+    for (int i = 0; i < NUM_BLADES; i++) {
+        blade_state_data.push_back(glm::vec4(blades[i].v2));
+        blade_state_data.back().w = 0.0f;
+    }
+
+    BufferUtils::CreateBufferFromData(device, commandPool, blades.data(), NUM_BLADES * sizeof(Blade), VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, bladesBuffer, bladesBufferMemory);
+    BufferUtils::CreateBuffer(device, NUM_BLADES * sizeof(Blade), VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, culledBladesBuffer, culledBladesBufferMemory);
     BufferUtils::CreateBufferFromData(device, commandPool, &indirectDraw, sizeof(BladeDrawIndirect), VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT, numBladesBuffer, numBladesBufferMemory);
+    BufferUtils::CreateBufferFromData(device, commandPool, blade_state_data.data(), NUM_BLADES * sizeof(glm::vec4), VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, bladeStateBuffer, bladeStateBufferMemory);
 }
 
 VkBuffer Blades::GetBladesBuffer() const {
@@ -61,6 +70,10 @@ VkBuffer Blades::GetNumBladesBuffer() const {
     return numBladesBuffer;
 }
 
+VkBuffer Blades::GetBladeStateBuffer() const {
+    return bladeStateBuffer;
+}
+
 Blades::~Blades() {
     vkDestroyBuffer(device->GetVkDevice(), bladesBuffer, nullptr);
     vkFreeMemory(device->GetVkDevice(), bladesBufferMemory, nullptr);
@@ -68,4 +81,6 @@ Blades::~Blades() {
     vkFreeMemory(device->GetVkDevice(), culledBladesBufferMemory, nullptr);
     vkDestroyBuffer(device->GetVkDevice(), numBladesBuffer, nullptr);
     vkFreeMemory(device->GetVkDevice(), numBladesBufferMemory, nullptr);
+    vkDestroyBuffer(device->GetVkDevice(), bladeStateBuffer, nullptr);
+    vkFreeMemory(device->GetVkDevice(), bladeStateBufferMemory, nullptr);
 }

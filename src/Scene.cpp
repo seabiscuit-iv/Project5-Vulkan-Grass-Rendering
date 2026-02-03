@@ -1,5 +1,7 @@
 #include "Scene.h"
+#include "Blades.h"
 #include "BufferUtils.h"
+#include <vulkan/vulkan_core.h>
 
 Scene::Scene(Device* device) : device(device) {
     BufferUtils::CreateBuffer(device, sizeof(Time), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, timeBuffer, timeBufferMemory);

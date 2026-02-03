@@ -109,7 +109,7 @@ int main() {
 
     swapChain = device->CreateSwapChain(surface, 5);
 
-    camera = new Camera(device, 640.f / 480.f);
+    camera = new Camera(device, 1920.f / 1080.f);
 
     VkCommandPoolCreateInfo transferPoolInfo = {};
     transferPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -180,6 +180,9 @@ int main() {
     delete renderer;
     delete swapChain;
     delete device;
+
+    vkDestroySurfaceKHR(instance->GetVkInstance(), surface, nullptr);
+
     delete instance;
     DestroyWindow();
     return 0;
